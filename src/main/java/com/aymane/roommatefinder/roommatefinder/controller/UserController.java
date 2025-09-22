@@ -5,6 +5,7 @@ import com.aymane.roommatefinder.roommatefinder.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.aymane.roommatefinder.roommatefinder.util.JwtUtil;
 
 import java.util.Optional;
 
@@ -17,6 +18,10 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
 
 
     @GetMapping("/users")
@@ -34,8 +39,10 @@ public class UserController {
     @PostMapping("/login")
     public String login(@RequestBody User loginUser) {
         Optional<User> user = userRepository.findByEmail(loginUser.getEmail());
+
         if (user.isPresent() && passwordEncoder.matches(loginUser.getPassword(), user.get().getPassword())) {
-            return "Login successful!";
+            String token = jwtUtil.generateToken(user.get().getEmail());
+            return "Login successful! Token: " + token;
         } else {
             return "Invalid credentials!";
         }
