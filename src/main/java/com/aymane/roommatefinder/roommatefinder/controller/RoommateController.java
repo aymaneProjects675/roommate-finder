@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.aymane.roommatefinder.roommatefinder.repository.UserRepository;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 import org.springframework.web.bind.annotation.GetMapping;
 import com.aymane.roommatefinder.roommatefinder.model.User;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/roommates")
@@ -17,10 +20,12 @@ public class RoommateController {
     private UserRepository userRepository;
 
     @GetMapping("/search")
-    public List<User> searchRoommates() {
+    public List<User> searchRoommates(
+            @RequestParam(required = false) Integer minBudget,
+            @RequestParam(required = false) Integer maxBudget
+    ) {
         return userRepository.findAll();
     }
-
 
 
 
