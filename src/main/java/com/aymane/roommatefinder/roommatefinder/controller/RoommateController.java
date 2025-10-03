@@ -21,8 +21,10 @@ public class RoommateController {
     private UserRepository userRepository;
 
     @GetMapping("/search")
-    public List<User> searchRoommates(@RequestParam(required = false) Integer minBudget, @RequestParam(required = false) Integer maxBudget) {
-        if (minBudget == null && maxBudget == null) {
+    public List<User> searchRoommates(@RequestParam(required = false) Integer minBudget,
+                                      @RequestParam(required = false) Integer maxBudget,
+                                      @RequestParam(required = false) String preferredNeighborhoods) {
+        if (minBudget == null && maxBudget == null && preferredNeighborhoods == null) {
             return userRepository.findAll();
         }
 
@@ -30,10 +32,27 @@ public class RoommateController {
         List<User> matchingUsers = new ArrayList<>();
 
         for (User user : allUsers) {
-            if (user.getMinBudget() != null && user.getMaxBudget() != null) {
-                if (user.getMinBudget() <= maxBudget && user.getMaxBudget() >= minBudget) {
-                    matchingUsers.add(user);
+            boolean budgetMatches = true;
+            boolean neighborhoodMatches = true;
+
+            // Only check budget if search parameters were provided
+            if (minBudget != null && maxBudget != null) {
+                if (user.getMinBudget() != null && user.getMaxBudget() != null) {
+                    budgetMatches = user.getMinBudget() <= maxBudget && user.getMaxBudget() >= minBudget;
+                } else {
+                    budgetMatches = false;
                 }
+            }
+            // Only check neighborhood if search parameter was provided
+            if (preferredNeighborhoods != null) {
+                if (user.getPreferredNeighborhoods() != null && user.getPreferredNeighborhoods().equals(preferredNeighborhoods)) {
+                    neighborhoodMatches = true;
+                } else {
+                    neighborhoodMatches = false;
+                }
+            }
+            if (budgetMatches && neighborhoodMatches) {
+                matchingUsers.add(user);
             }
         }
 
