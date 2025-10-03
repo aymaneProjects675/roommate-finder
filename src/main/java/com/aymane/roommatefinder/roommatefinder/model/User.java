@@ -26,6 +26,7 @@ private String lifestyle;
 private Boolean smokingOk;
 private Boolean petsOk;
 
+private String preferredNeighborhoods;
 private String bio;
 private Integer age;
 private String gender;

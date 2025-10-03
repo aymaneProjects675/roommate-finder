@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.aymane.roommatefinder.roommatefinder.repository.UserRepository;
 import org.springframework.web.bind.annotation.RequestParam;
-import java.util.ArrayList; 
+import java.util.ArrayList;
 
 
 import org.springframework.web.bind.annotation.GetMapping;
